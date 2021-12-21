@@ -1,5 +1,6 @@
 package ru.otus.spring.domain;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Data
 @RequiredArgsConstructor
+@Builder(toBuilder = true)
 public final class Genre {
     /**
      * Идентификатор жанра.

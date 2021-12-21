@@ -1,5 +1,6 @@
 package ru.otus.spring.domain;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.time.LocalDate;
  */
 @Data
 @RequiredArgsConstructor
+@Builder(toBuilder = true)
 public final class Author {
     /**
      * Идентификатор автора.

@@ -2,7 +2,6 @@ package ru.otus.spring.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,8 +12,7 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @DisplayName("Service для работы с авторами должен")
@@ -30,8 +28,8 @@ public class AuthorServiceImplTest {
     @Test
     void shouldGetAuthorById() {
         Author expectedAuthor = createAuthor();
-        Mockito.when(authorDao.getById(1)).thenReturn(expectedAuthor);
 
+        when(authorDao.getById(1)).thenReturn(expectedAuthor);
         Author actualAuthor = authorService.getAuthor(1);
 
         assertThat(actualAuthor).usingRecursiveComparison().isEqualTo(expectedAuthor);

@@ -4,29 +4,22 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.spring.domain.Author;
 import ru.otus.spring.domain.Book;
 import ru.otus.spring.domain.Genre;
 
 import java.time.LocalDate;
+import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.*;
 
 @DisplayName("Dao для работы с книгами должно")
 @JdbcTest
-@Import({BookDaoJdbc.class, AuthorDaoJdbc.class, GenreDaoJdbc.class})
+@Import(BookDaoJdbc.class)
 public class BookDaoJdbcTest {
-
-    @MockBean
-    private GenreDaoJdbc genreDao;
-
-    @MockBean
-    private AuthorDaoJdbc authorDao;
 
     @Autowired
     private BookDaoJdbc bookDao;
@@ -37,15 +30,11 @@ public class BookDaoJdbcTest {
         Author expectedAuthor = new Author(5, "Random User", "Random Country", LocalDate.of(5999, 12, 31));
         Genre expectedGenre = new Genre(3, "Роман");
         Book expectedBook = new Book(10, "Горе от ума", "1833", expectedAuthor, expectedGenre);
-        when(genreDao.getById(anyInt())).thenReturn(expectedGenre);
-        when(authorDao.getById(anyInt())).thenReturn(expectedAuthor);
 
         bookDao.insert(expectedBook);
         Book actualBook = bookDao.getById(10);
 
-        assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
-        verify(genreDao, times(1)).getById(anyInt());
-        verify(authorDao, times(1)).getById(anyInt());
+        assertThat(actualBook).matches(isEqualToAnotherBook(expectedBook));
     }
 
     @DisplayName("возвращать исключение при попытке вставить книгу")
@@ -55,7 +44,8 @@ public class BookDaoJdbcTest {
         Genre expectedGenre = new Genre(2, "Поэзия");
         Book expectedBook = new Book(1, "Горе от ума", "1833", expectedAuthor, expectedGenre);
 
-        assertThatExceptionOfType(DataAccessException.class).isThrownBy(() -> bookDao.insert(expectedBook))
+        assertThatExceptionOfType(DuplicateKeyException.class)
+                .isThrownBy(() -> bookDao.insert(expectedBook))
                 .withMessageContaining("Нарушение уникального индекса или первичного ключа");
     }
 
@@ -64,8 +54,9 @@ public class BookDaoJdbcTest {
     void shouldDeleteBookById() {
         bookDao.deleteById(5);
 
-        assertThatThrownBy(() -> bookDao.getById(5)).isInstanceOf(DataAccessException.class)
-                .hasMessageContaining("Incorrect result size: expected 1, actual 0");
+        assertThatThrownBy(() -> bookDao.getById(5))
+                .isInstanceOf(EmptyResultDataAccessException.class)
+                .hasMessage("Incorrect result size: expected 1, actual 0");
     }
 
     @DisplayName("обновлять параметры книги")
@@ -74,15 +65,11 @@ public class BookDaoJdbcTest {
         Author expectedAuthor = new Author(5, "Random User", "Random Country", LocalDate.of(5999, 12, 31));
         Genre expectedGenre = new Genre(3, "Роман");
         Book expectedBook = new Book(5, "Updated Name", "7000", expectedAuthor, expectedGenre);
-        when(genreDao.getById(anyInt())).thenReturn(expectedGenre);
-        when(authorDao.getById(anyInt())).thenReturn(expectedAuthor);
 
         bookDao.update(expectedBook);
         Book actualBook = bookDao.getById(5);
 
-        assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
-        verify(genreDao, times(1)).getById(anyInt());
-        verify(authorDao, times(1)).getById(anyInt());
+        assertThat(actualBook).matches(isEqualToAnotherBook(expectedBook));
     }
 
     @DisplayName("получать книгу по id")
@@ -91,20 +78,26 @@ public class BookDaoJdbcTest {
         Author expectedAuthor = new Author(1, "Vasiliy Ivanov", "Russia", LocalDate.of(1900, 1, 1));
         Genre expectedGenre = new Genre(5, "Трагедия");
         Book expectedBook = new Book(5, "Random book5", "6003", expectedAuthor, expectedGenre);
-        when(genreDao.getById(anyInt())).thenReturn(expectedGenre);
-        when(authorDao.getById(anyInt())).thenReturn(expectedAuthor);
 
         Book actualBook = bookDao.getById(5);
 
-        assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
-        verify(genreDao, times(1)).getById(anyInt());
-        verify(authorDao, times(1)).getById(anyInt());
+        assertThat(actualBook).matches(isEqualToAnotherBook(expectedBook));
     }
 
     @DisplayName("возвращать исключение при попытке вызвать getById")
     @Test
     void shouldReturnException_whenCallGetById() {
-        assertThatThrownBy(() -> bookDao.getById(999)).hasMessage("Incorrect result size: expected 1, actual 0");
+        assertThatThrownBy(() -> bookDao.getById(999))
+                .isInstanceOf(EmptyResultDataAccessException.class)
+                .hasMessage("Incorrect result size: expected 1, actual 0");
+    }
+
+    private Predicate<? super Book> isEqualToAnotherBook(Book book) {
+        return b -> b.getId() == book.getId() &&
+                b.getName().equals(book.getName()) &&
+                b.getYearOfPublication().equals(book.getYearOfPublication()) &&
+                b.getAuthor().getId() == book.getAuthor().getId() &&
+                b.getGenre().getId() == book.getGenre().getId();
     }
 
 }

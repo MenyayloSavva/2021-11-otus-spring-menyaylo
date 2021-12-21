@@ -10,6 +10,8 @@ import ru.otus.spring.domain.Book;
 public class BookServiceImpl implements BookService {
 
     private final BookDaoJdbc bookDao;
+    private final AuthorServiceImpl authorService;
+    private final GenreServiceImpl genreService;
 
     @Override
     public void insertBook(Book book) {
@@ -23,7 +25,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getBook(int id) {
-        return bookDao.getById(id);
+        Book book = bookDao.getById(id);
+        return book.toBuilder()
+                .author(authorService.getAuthor(book.getAuthor().getId()))
+                .genre(genreService.getGenre(book.getGenre().getId()))
+                .build();
     }
 
     @Override

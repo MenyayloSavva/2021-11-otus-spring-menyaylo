@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
+import ru.otus.spring.domain.Author;
 import ru.otus.spring.domain.Book;
+import ru.otus.spring.domain.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,9 +17,6 @@ import java.util.Map;
 public class BookDaoJdbc implements BookDao {
 
     private final NamedParameterJdbcOperations jdbc;
-
-    private final AuthorDao authorDao;
-    private final GenreDao genreDao;
 
     @Override
     public void insert(Book book) {
@@ -35,7 +34,7 @@ public class BookDaoJdbc implements BookDao {
     public Book getById(int id) {
         return jdbc.queryForObject("select id, name, year_of_publication, author_id, genre_id from books where id = :id",
                 Map.of("id", id),
-                new BookMapper(authorDao, genreDao)
+                new BookMapper()
         );
     }
 
@@ -61,17 +60,18 @@ public class BookDaoJdbc implements BookDao {
     @RequiredArgsConstructor
     private static class BookMapper implements RowMapper<Book> {
 
-        private final AuthorDao authorDao;
-        private final GenreDao genreDao;
-
         @Override
         public Book mapRow(ResultSet resultSet, int i) throws SQLException {
             int id = resultSet.getInt("id");
             String name = resultSet.getString("name");
             String yearOfPublication = resultSet.getString("year_of_publication");
-            int authorId = resultSet.getInt("author_id");
-            int genreId = resultSet.getInt("genre_id");
-            return new Book(id, name, yearOfPublication, authorDao.getById(authorId), genreDao.getById(genreId));
+            Author author = Author.builder()
+                    .id(resultSet.getInt("author_id"))
+                    .build();
+            Genre genre = Genre.builder()
+                    .id(resultSet.getInt("genre_id"))
+                    .build();
+            return new Book(id, name, yearOfPublication, author, genre);
         }
     }
 }
