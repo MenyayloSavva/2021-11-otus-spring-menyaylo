@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
+import static ru.otus.spring.util.DateUtils.getLocalDateFromDate;
+
 @Repository
 @RequiredArgsConstructor
 public class BookDaoJdbc implements BookDao {
@@ -32,7 +34,12 @@ public class BookDaoJdbc implements BookDao {
 
     @Override
     public Book getById(int id) {
-        return jdbc.queryForObject("select id, name, year_of_publication, author_id, genre_id from books where id = :id",
+        return jdbc.queryForObject("select b.id, b.name, b.year_of_publication, " +
+                        "a.id as author_id, a.name as author_name, a.country as author_country, a.birth_date as author_birth_date, " +
+                        "g.id as genre_id, g.name as genre_name " +
+                        "from books b join authors a on b.author_id = a.id " +
+                        "join genres g on b.genre_id = g.id " +
+                        "where b.id = :id",
                 Map.of("id", id),
                 new BookMapper()
         );
@@ -65,12 +72,19 @@ public class BookDaoJdbc implements BookDao {
             int id = resultSet.getInt("id");
             String name = resultSet.getString("name");
             String yearOfPublication = resultSet.getString("year_of_publication");
+
             Author author = Author.builder()
                     .id(resultSet.getInt("author_id"))
+                    .name(resultSet.getString("author_name"))
+                    .country(resultSet.getString("author_country"))
+                    .birthDate(getLocalDateFromDate(resultSet.getDate("author_birth_date")))
                     .build();
+
             Genre genre = Genre.builder()
                     .id(resultSet.getInt("genre_id"))
+                    .name(resultSet.getString("genre_name"))
                     .build();
+
             return new Book(id, name, yearOfPublication, author, genre);
         }
     }

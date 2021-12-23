@@ -12,7 +12,6 @@ import ru.otus.spring.domain.Book;
 import ru.otus.spring.domain.Genre;
 
 import java.time.LocalDate;
-import java.util.function.Predicate;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -34,7 +33,7 @@ public class BookDaoJdbcTest {
         bookDao.insert(expectedBook);
         Book actualBook = bookDao.getById(10);
 
-        assertThat(actualBook).matches(isEqualToAnotherBook(expectedBook));
+        assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }
 
     @DisplayName("возвращать исключение при попытке вставить книгу")
@@ -69,7 +68,7 @@ public class BookDaoJdbcTest {
         bookDao.update(expectedBook);
         Book actualBook = bookDao.getById(5);
 
-        assertThat(actualBook).matches(isEqualToAnotherBook(expectedBook));
+        assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }
 
     @DisplayName("получать книгу по id")
@@ -81,7 +80,7 @@ public class BookDaoJdbcTest {
 
         Book actualBook = bookDao.getById(5);
 
-        assertThat(actualBook).matches(isEqualToAnotherBook(expectedBook));
+        assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }
 
     @DisplayName("возвращать исключение при попытке вызвать getById")
@@ -90,14 +89,6 @@ public class BookDaoJdbcTest {
         assertThatThrownBy(() -> bookDao.getById(999))
                 .isInstanceOf(EmptyResultDataAccessException.class)
                 .hasMessage("Incorrect result size: expected 1, actual 0");
-    }
-
-    private Predicate<? super Book> isEqualToAnotherBook(Book book) {
-        return b -> b.getId() == book.getId() &&
-                b.getName().equals(book.getName()) &&
-                b.getYearOfPublication().equals(book.getYearOfPublication()) &&
-                b.getAuthor().getId() == book.getAuthor().getId() &&
-                b.getGenre().getId() == book.getGenre().getId();
     }
 
 }

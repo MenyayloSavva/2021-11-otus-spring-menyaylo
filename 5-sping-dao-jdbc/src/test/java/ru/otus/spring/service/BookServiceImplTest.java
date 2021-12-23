@@ -23,12 +23,6 @@ public class BookServiceImplTest {
     @MockBean
     private BookDaoJdbc bookDao;
 
-    @MockBean
-    private AuthorServiceImpl authorService;
-
-    @MockBean
-    private GenreServiceImpl genreService;
-
     @Autowired
     private BookServiceImpl bookService;
 
@@ -38,14 +32,10 @@ public class BookServiceImplTest {
         Book expectedBook = createBook();
 
         when(bookDao.getById(1)).thenReturn(expectedBook);
-        when(authorService.getAuthor(1)).thenReturn(expectedBook.getAuthor());
-        when(genreService.getGenre(1)).thenReturn(expectedBook.getGenre());
         Book actualBook = bookService.getBook(1);
 
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
         verify(bookDao, times(1)).getById(anyInt());
-        verify(authorService, times(1)).getAuthor(anyInt());
-        verify(genreService, times(1)).getGenre(anyInt());
     }
 
     @DisplayName("удалять книгу по id")
