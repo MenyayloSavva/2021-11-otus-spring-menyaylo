@@ -1,9 +1,9 @@
-package ru.otus.spring.service;
+package ru.otus.spring.repository;
 
 import ru.otus.spring.domain.Genre;
 
 import java.util.Optional;
 
-public interface GenreService {
+public interface GenreRepository {
     Optional<Genre> findById(int id);
 }

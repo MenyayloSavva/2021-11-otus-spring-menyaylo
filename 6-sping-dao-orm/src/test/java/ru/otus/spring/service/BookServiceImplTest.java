@@ -5,72 +5,119 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.otus.spring.dao.BookDaoJdbc;
 import ru.otus.spring.domain.Author;
 import ru.otus.spring.domain.Book;
+import ru.otus.spring.domain.BookComment;
 import ru.otus.spring.domain.Genre;
+import ru.otus.spring.repository.BookRepositoryJpa;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@DisplayName("Service для работы с книгами должен")
+@DisplayName("Service для работы с книгами должен ")
 public class BookServiceImplTest {
 
     @MockBean
-    private BookDaoJdbc bookDao;
+    private BookRepositoryJpa repository;
 
     @Autowired
     private BookServiceImpl bookService;
 
-    @DisplayName("получать книгу по id")
+    @DisplayName("сохранять книгу")
     @Test
-    void shouldGetBookById() {
+    void shouldSaveBook() {
+        Book book = createBook();
+
+        bookService.save(book);
+
+        verify(repository, times(1)).save(any());
+    }
+
+    @DisplayName("находить книгу по id")
+    @Test
+    void shouldFindBookById() {
         Book expectedBook = createBook();
 
-        when(bookDao.getById(1)).thenReturn(expectedBook);
-        Book actualBook = bookService.getBook(1);
+        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(expectedBook));
+        Optional<Book> actualBook = bookService.findById(1);
 
-        assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
-        verify(bookDao, times(1)).getById(anyInt());
+        assertThat(actualBook).isPresent().get().usingRecursiveComparison().isEqualTo(expectedBook);
+        verify(repository, times(1)).findById(anyInt());
+    }
+
+    @DisplayName("возвращать список всех книг")
+    @Test
+    void shouldFindAll() {
+        Book expectedBook1 = createBook();
+        Book expectedBook2 = createBook();
+
+        when(repository.findAll()).thenReturn(List.of(expectedBook1, expectedBook2));
+        List<Book> actualBookList = bookService.findAll();
+
+        assertThat(actualBookList).hasSize(2)
+                .allMatch(b -> b.getName().equals("book1"))
+                .allMatch(b -> b.getAuthor().getName().equals("Vasiliy Ivanov"))
+                .allMatch(b -> b.getGenre().getName().equals("Любовная проза"))
+                .allMatch(b -> b.getComments().size() == 1);
+        verify(repository, times(1)).findAll();
+    }
+
+    @DisplayName("находить книгу по имени")
+    @Test
+    void shouldFindBookByName() {
+        Book expectedBook = createBook();
+
+        when(repository.findByName(anyString())).thenReturn(List.of(expectedBook));
+        List<Book> actualBookList = bookService.findByName("book1");
+
+        assertThat(actualBookList).hasSize(1)
+                .allMatch(b -> b.getName().equals("book1"))
+                .allMatch(b -> b.getAuthor().getName().equals("Vasiliy Ivanov"))
+                .allMatch(b -> b.getGenre().getName().equals("Любовная проза"))
+                .allMatch(b -> b.getComments().size() == 1);
+        verify(repository, times(1)).findByName(anyString());
+    }
+
+    @DisplayName("обновлять имя книги по id")
+    @Test
+    void shouldUpdateBookById() {
+        bookService.updateNameById(1, "New Book Name");
+
+        verify(repository, times(1)).updateNameById(anyInt(), anyString());
     }
 
     @DisplayName("удалять книгу по id")
     @Test
     void shouldDeleteBookById() {
-        bookService.deleteBook(1);
-        bookService.deleteBook(2);
-        bookService.deleteBook(3);
+        bookService.deleteById(1);
 
-        verify(bookDao, times(3)).deleteById(anyInt());
+        verify(repository, times(1)).deleteById(anyInt());
     }
 
-    @DisplayName("добавлять новую книгу")
-    @Test
-    void shouldInsertBook() {
-        Book expectedBook = createBook();
-
-        bookService.insertBook(expectedBook);
-
-        verify(bookDao, times(1)).insert(any());
-    }
-
-    @DisplayName("обновлять параметры книги")
-    @Test
-    void shouldUpdateBook() {
-        Book expectedBook = createBook();
-
-        bookService.updateBook(expectedBook);
-
-        verify(bookDao, times(1)).update(any());
-    }
 
     private Book createBook() {
-        Author expectedAuthor = new Author(1, "Vasiliy Ivanov", "Russia", LocalDate.of(1900, 1, 1));
-        Genre expectedGenre = new Genre(1, "Любовная проза");
-        return new Book(1, "book1", "9999", expectedAuthor, expectedGenre);
+        Author author = new Author(1, "Vasiliy Ivanov", "Russia", LocalDate.of(1900, 1, 1));
+        Genre genre = new Genre(1, "Любовная проза");
+        Book book = new Book();
+        BookComment bookComment = new BookComment(1, "Some comment text", book);
+        return book.toBuilder()
+                .id(1)
+                .name("book1")
+                .yearOfPublication("9999")
+                .author(author)
+                .genre(genre)
+                .comments(Collections.singletonList(bookComment))
+                .build();
     }
 }

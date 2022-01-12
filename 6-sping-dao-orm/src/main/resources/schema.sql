@@ -1,15 +1,15 @@
 DROP TABLE IF EXISTS authors CASCADE;
 CREATE TABLE authors(
-                        id BIGINT PRIMARY KEY,
-                        name VARCHAR(50),
-                        country VARCHAR(50),
-                        birth_date DATE
+                      id BIGINT PRIMARY KEY,
+                      name VARCHAR(50),
+                      country VARCHAR(50),
+                      birth_date DATE
 );
 
 DROP TABLE IF EXISTS genres CASCADE;
 CREATE TABLE genres(
-                       id BIGINT PRIMARY KEY,
-                       name VARCHAR(50)
+                      id BIGINT PRIMARY KEY,
+                      name VARCHAR(50)
 );
 
 DROP TABLE IF EXISTS books CASCADE;
@@ -21,6 +21,14 @@ CREATE TABLE books(
                       genre_id BIGINT,
                       foreign key (author_id) references authors(id),
                       foreign key (genre_id) references genres(id)
+);
+
+DROP TABLE IF EXISTS book_comments CASCADE;
+CREATE TABLE book_comments(
+                      id BIGINT PRIMARY KEY,
+                      text VARCHAR(4000),
+                      book_id BIGINT,
+                      foreign key (book_id) references books(id)
 );
 
 

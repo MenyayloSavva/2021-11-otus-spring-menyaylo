@@ -5,36 +5,40 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.otus.spring.dao.AuthorDaoJdbc;
 import ru.otus.spring.domain.Author;
+import ru.otus.spring.repository.AuthorRepositoryJpa;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@DisplayName("Service для работы с авторами должен")
+@DisplayName("Service для работы с авторами должен ")
 public class AuthorServiceImplTest {
 
     @MockBean
-    private AuthorDaoJdbc authorDao;
+    private AuthorRepositoryJpa repository;
 
     @Autowired
     private AuthorServiceImpl authorService;
 
-    @DisplayName("получать автора по id")
+    @DisplayName("находить автора по id")
     @Test
-    void shouldGetAuthorById() {
+    void shouldFindGenreById() {
         Author expectedAuthor = createAuthor();
 
-        when(authorDao.getById(1)).thenReturn(expectedAuthor);
-        Author actualAuthor = authorService.getAuthor(1);
+        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(expectedAuthor));
+        Optional<Author> actualAuthor = authorService.findById(1);
 
-        assertThat(actualAuthor).usingRecursiveComparison().isEqualTo(expectedAuthor);
-        verify(authorDao, times(1)).getById(anyInt());
+        assertThat(actualAuthor).isPresent().get().usingRecursiveComparison().isEqualTo(expectedAuthor);
+        verify(repository, times(1)).findById(anyInt());
     }
+
 
     private Author createAuthor() {
         return new Author(1, "Vasiliy Ivanov", "Russia", LocalDate.of(1900, 1, 1));

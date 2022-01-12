@@ -3,46 +3,40 @@ package ru.otus.spring.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.spring.domain.Book;
-import ru.otus.spring.repository.BookRepositoryJpa;
+import ru.otus.spring.domain.BookComment;
+import ru.otus.spring.repository.BookCommentRepositoryJpa;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class BookServiceImpl implements BookService {
+public class BookCommentServiceImpl implements BookCommentService {
 
-    private final BookRepositoryJpa repository;
+    private final BookCommentRepositoryJpa repository;
 
     @Override
     @Transactional
-    public void save(Book book) {
-        repository.save(book);
+    public void save(BookComment comment) {
+        repository.save(comment);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Book> findById(int id) {
+    public Optional<BookComment> findById(int id) {
         return repository.findById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Book> findAll() {
+    public List<BookComment> findAll() {
         return repository.findAll();
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Book> findByName(String name) {
-        return repository.findByName(name);
-    }
-
-    @Override
     @Transactional
-    public void updateNameById(int id, String name) {
-        repository.updateNameById(id, name);
+    public void updateTextById(int id, String text) {
+        repository.updateTextById(id, text);
     }
 
     @Override

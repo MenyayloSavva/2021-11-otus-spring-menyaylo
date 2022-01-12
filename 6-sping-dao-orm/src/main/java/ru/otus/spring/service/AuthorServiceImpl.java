@@ -2,17 +2,21 @@ package ru.otus.spring.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.spring.dao.AuthorDaoJdbc;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.domain.Author;
+import ru.otus.spring.repository.AuthorRepositoryJpa;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
 
-    private final AuthorDaoJdbc authorDao;
+    private final AuthorRepositoryJpa repository;
 
     @Override
-    public Author getAuthor(int id) {
-        return authorDao.getById(id);
+    @Transactional(readOnly = true)
+    public Optional<Author> findById(int id) {
+        return repository.findById(id);
     }
 }

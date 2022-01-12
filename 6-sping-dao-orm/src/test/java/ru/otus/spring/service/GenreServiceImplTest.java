@@ -5,34 +5,39 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.otus.spring.dao.GenreDaoJdbc;
 import ru.otus.spring.domain.Genre;
+import ru.otus.spring.repository.GenreRepositoryJpa;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@DisplayName("Service для работы с жанрами должен")
+@DisplayName("Service для работы с жанрами должен ")
 public class GenreServiceImplTest {
 
     @MockBean
-    private GenreDaoJdbc genreDao;
+    private GenreRepositoryJpa repository;
 
     @Autowired
-    private GenreServiceImpl genreService;
+    private GenreService genreService;
 
-    @DisplayName("получать жанр по id")
+    @DisplayName("находить жанр по id")
     @Test
-    void shouldGetGenreById() {
+    void shouldFindGenreById() {
         Genre expectedGenre = createGenre();
 
-        when(genreDao.getById(1)).thenReturn(expectedGenre);
-        Genre actualGenre = genreService.getGenre(1);
+        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(expectedGenre));
+        Optional<Genre> actualGenre = genreService.findById(1);
 
-        assertThat(actualGenre).usingRecursiveComparison().isEqualTo(expectedGenre);
-        verify(genreDao, times(1)).getById(anyInt());
+        assertThat(actualGenre).isPresent().get().usingRecursiveComparison().isEqualTo(expectedGenre);
+        verify(repository, times(1)).findById(anyInt());
     }
+
 
     private Genre createGenre() {
         return new Genre(1, "Любовная проза");

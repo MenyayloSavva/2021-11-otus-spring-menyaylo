@@ -1,9 +1,9 @@
-package ru.otus.spring.service;
+package ru.otus.spring.repository;
 
 import ru.otus.spring.domain.Author;
 
 import java.util.Optional;
 
-public interface AuthorService {
+public interface AuthorRepository {
     Optional<Author> findById(int id);
 }
