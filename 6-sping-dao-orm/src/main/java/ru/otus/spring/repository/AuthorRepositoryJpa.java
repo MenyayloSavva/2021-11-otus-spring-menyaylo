@@ -16,7 +16,7 @@ public class AuthorRepositoryJpa implements AuthorRepository {
     private final EntityManager em;
 
     @Override
-    public Optional<Author> findById(int id) {
+    public Optional<Author> findById(long id) {
         return Optional.ofNullable(em.find(Author.class, id));
     }
 }

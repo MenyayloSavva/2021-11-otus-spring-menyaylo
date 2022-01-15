@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -45,11 +45,11 @@ public class BookCommentServiceImplTest {
     void shouldFindCommentById() {
         BookComment expectedComment = createBookComment();
 
-        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(expectedComment));
-        Optional<BookComment> actualComment = bookCommentService.findById(1);
+        when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(expectedComment));
+        Optional<BookComment> actualComment = bookCommentService.findById(1L);
 
         assertThat(actualComment).isPresent().get().usingRecursiveComparison().isEqualTo(expectedComment);
-        verify(repository, times(1)).findById(anyInt());
+        verify(repository, times(1)).findById(anyLong());
     }
 
     @DisplayName("возвращать список всех комментариев")
@@ -70,22 +70,22 @@ public class BookCommentServiceImplTest {
     @DisplayName("обновлять текст комментария по id")
     @Test
     void shouldUpdateTextById() {
-        bookCommentService.updateTextById(1, "New Comment Text");
+        bookCommentService.updateTextById(1L, "New Comment Text");
 
-        verify(repository, times(1)).updateTextById(anyInt(), anyString());
+        verify(repository, times(1)).updateTextById(anyLong(), anyString());
     }
 
     @DisplayName("удалять комментарий по id")
     @Test
     void shouldDeleteCommentById() {
-        bookCommentService.deleteById(1);
+        bookCommentService.deleteById(1L);
 
-        verify(repository, times(1)).deleteById(anyInt());
+        verify(repository, times(1)).deleteById(anyLong());
     }
 
 
     private BookComment createBookComment() {
         Book book = new Book();
-        return new BookComment(1, "Some comment text", book);
+        return new BookComment(1L, "Some comment text", book);
     }
 }

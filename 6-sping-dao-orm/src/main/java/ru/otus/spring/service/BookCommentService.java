@@ -8,11 +8,11 @@ import java.util.Optional;
 public interface BookCommentService {
     void save(BookComment comment);
 
-    Optional<BookComment> findById(int id);
+    Optional<BookComment> findById(long id);
 
     List<BookComment> findAll();
 
-    void updateTextById(int id, String text);
+    void updateTextById(long id, String text);
 
-    void deleteById(int id);
+    void deleteById(long id);
 }

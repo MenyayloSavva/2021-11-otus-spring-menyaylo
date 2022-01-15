@@ -8,13 +8,13 @@ import java.util.Optional;
 public interface BookRepository {
     Book save(Book book);
 
-    Optional<Book> findById(int id);
+    Optional<Book> findById(long id);
 
     List<Book> findAll();
 
     List<Book> findByName(String name);
 
-    void updateNameById(int id, String name);
+    void updateNameById(long id, String name);
 
-    void deleteById(int id);
+    void deleteById(long id);
 }

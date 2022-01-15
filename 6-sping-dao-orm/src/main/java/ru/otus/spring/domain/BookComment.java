@@ -9,14 +9,18 @@ import lombok.Setter;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.Table;
 import java.util.Objects;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Комментарий к книге.
@@ -28,24 +32,31 @@ import java.util.Objects;
 @Builder(toBuilder = true)
 @Entity
 @Table(name = "book_comments")
+@NamedEntityGraph(name = "graph.BookComment.book",
+        attributeNodes = @NamedAttributeNode(value = "book", subgraph = "subgraph.book"),
+        subgraphs = @NamedSubgraph(name = "subgraph.book",
+                attributeNodes = {
+                        @NamedAttributeNode("author"),
+                        @NamedAttributeNode("genre")
+                }))
 public final class BookComment {
     /**
      * Идентификатор комментария.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final int id;
+    private final long id;
 
     /**
      * Текст.
      */
-    @Column(name = "text", nullable = false, unique = true)
+    @Column(name = "text", nullable = false)
     private final String text;
 
     /**
      * Книга.
      */
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "book_id")
     private final Book book;
 
@@ -68,7 +79,7 @@ public final class BookComment {
         return "BookComment{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
-                ", book_id=" + book.getId() +
+                ", book_id=" + (nonNull(book) ? book.getId() : "null") +
                 '}';
     }
 }

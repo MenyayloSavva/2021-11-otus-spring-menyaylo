@@ -16,7 +16,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Genre> findById(int id) {
+    public Optional<Genre> findById(long id) {
         return repository.findById(id);
     }
 }

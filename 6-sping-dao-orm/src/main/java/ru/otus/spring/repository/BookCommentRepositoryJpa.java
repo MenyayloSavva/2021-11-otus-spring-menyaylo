@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.domain.BookComment;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,17 +31,20 @@ public class BookCommentRepositoryJpa implements BookCommentRepository {
     }
 
     @Override
-    public Optional<BookComment> findById(int id) {
+    public Optional<BookComment> findById(long id) {
         return Optional.ofNullable(em.find(BookComment.class, id));
     }
 
     @Override
     public List<BookComment> findAll() {
-        return em.createQuery("select bc from BookComment bc", BookComment.class).getResultList();
+        EntityGraph<?> entityGraph = em.getEntityGraph("graph.BookComment.book");
+        TypedQuery<BookComment> query = em.createQuery("select bc from BookComment bc ", BookComment.class);
+        query.setHint("javax.persistence.fetchgraph", entityGraph);
+        return query.getResultList();
     }
 
     @Override
-    public void updateTextById(int id, String text) {
+    public void updateTextById(long id, String text) {
         Query query = em.createQuery("update BookComment bc " +
                 "set bc.text = :text " +
                 "where bc.id = :id");
@@ -49,7 +54,7 @@ public class BookCommentRepositoryJpa implements BookCommentRepository {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         Query query = em.createQuery("delete " +
                 "from BookComment bc " +
                 "where bc.id = :id");

@@ -6,11 +6,9 @@ spring:
       mode: always
 
   jpa:
-    generate-ddl: false
-    #generate-ddl: true
+    generate-ddl: true
     hibernate:
-      ddl-auto: none
-      #ddl-auto: create-drop
+      ddl-auto: validate
     show-sql: true
 
   shell:
@@ -23,4 +21,6 @@ spring:
 logging:
   level:
     ROOT: ERROR
+    #org.hibernate.SQL: DEBUG
+    #org.hibernate.type: TRACE
 

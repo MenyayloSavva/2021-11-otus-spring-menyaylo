@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringDaoJdbcApplication {
+public class SpringDaoOrmApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringDaoJdbcApplication.class, args);
+        SpringApplication.run(SpringDaoOrmApplication.class, args);
     }
 
 }

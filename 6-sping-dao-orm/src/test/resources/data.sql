@@ -10,8 +10,10 @@ insert into genres (id, name) values (4, 'Комедия');
 insert into books (id, name, year_of_publication, author_id, genre_id) values (1, 'Васильки', '2018', 1, 1);
 insert into books (id, name, year_of_publication, author_id, genre_id) values (2, 'Евгений Онегин', '1830', 2, 3);
 insert into books (id, name, year_of_publication, author_id, genre_id) values (3, 'Декабрьское утро', '1859', 3, 2);
+insert into books (id, name, year_of_publication, author_id, genre_id) values (4, 'Звезды в саду', '2019', 1, 1);
 
 insert into book_comments (id, text, book_id) values (1, 'Первый комментарий', 1);
 insert into book_comments (id, text, book_id) values (2, 'Второй комментарий', 1);
 insert into book_comments (id, text, book_id) values (3, 'Третий комментарий', 2);
-insert into book_comments (id, text, book_id) values (4, 'Четвертый комментарий', 2);
+insert into book_comments (id, text, book_id) values (4, 'Четвертый комментарий', 4);
+insert into book_comments (id, text, book_id) values (5, 'Пятый комментарий', 4);

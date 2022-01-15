@@ -16,7 +16,7 @@ public class GenreRepositoryJpa implements GenreRepository {
     private final EntityManager em;
 
     @Override
-    public Optional<Genre> findById(int id) {
+    public Optional<Genre> findById(long id) {
         return Optional.ofNullable(em.find(Genre.class, id));
     }
 }

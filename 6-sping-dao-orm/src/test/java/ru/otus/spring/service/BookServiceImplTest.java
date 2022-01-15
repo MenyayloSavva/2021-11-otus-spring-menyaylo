@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -49,11 +49,11 @@ public class BookServiceImplTest {
     void shouldFindBookById() {
         Book expectedBook = createBook();
 
-        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(expectedBook));
-        Optional<Book> actualBook = bookService.findById(1);
+        when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(expectedBook));
+        Optional<Book> actualBook = bookService.findById(1L);
 
         assertThat(actualBook).isPresent().get().usingRecursiveComparison().isEqualTo(expectedBook);
-        verify(repository, times(1)).findById(anyInt());
+        verify(repository, times(1)).findById(anyLong());
     }
 
     @DisplayName("возвращать список всех книг")
@@ -92,27 +92,27 @@ public class BookServiceImplTest {
     @DisplayName("обновлять имя книги по id")
     @Test
     void shouldUpdateBookById() {
-        bookService.updateNameById(1, "New Book Name");
+        bookService.updateNameById(1L, "New Book Name");
 
-        verify(repository, times(1)).updateNameById(anyInt(), anyString());
+        verify(repository, times(1)).updateNameById(anyLong(), anyString());
     }
 
     @DisplayName("удалять книгу по id")
     @Test
     void shouldDeleteBookById() {
-        bookService.deleteById(1);
+        bookService.deleteById(1L);
 
-        verify(repository, times(1)).deleteById(anyInt());
+        verify(repository, times(1)).deleteById(anyLong());
     }
 
 
     private Book createBook() {
-        Author author = new Author(1, "Vasiliy Ivanov", "Russia", LocalDate.of(1900, 1, 1));
-        Genre genre = new Genre(1, "Любовная проза");
+        Author author = new Author(1L, "Vasiliy Ivanov", "Russia", LocalDate.of(1900, 1, 1));
+        Genre genre = new Genre(1L, "Любовная проза");
         Book book = new Book();
-        BookComment bookComment = new BookComment(1, "Some comment text", book);
+        BookComment bookComment = new BookComment(1L, "Some comment text", book);
         return book.toBuilder()
-                .id(1)
+                .id(1L)
                 .name("book1")
                 .yearOfPublication("9999")
                 .author(author)

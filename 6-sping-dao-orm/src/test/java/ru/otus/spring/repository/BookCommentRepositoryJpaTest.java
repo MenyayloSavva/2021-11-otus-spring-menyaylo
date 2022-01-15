@@ -13,7 +13,6 @@ import ru.otus.spring.domain.BookComment;
 import ru.otus.spring.domain.Genre;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +32,8 @@ public class BookCommentRepositoryJpaTest {
     @DisplayName("должен загружать информацию о нужном комментарии по id")
     @Test
     void shouldFindExpectedCommentById() {
-        Optional<BookComment> actualComment = repository.findById(1);
-        BookComment expectedComment = em.find(BookComment.class, 1);
+        Optional<BookComment> actualComment = repository.findById(1L);
+        BookComment expectedComment = em.find(BookComment.class, 1L);
         assertThat(actualComment).isPresent().get().usingRecursiveComparison().isEqualTo(expectedComment);
     }
 
@@ -46,11 +45,12 @@ public class BookCommentRepositoryJpaTest {
         sessionFactory.getStatistics().setStatisticsEnabled(true);
 
         List<BookComment> comments = repository.findAll();
-        assertThat(comments).isNotNull().hasSize(4)
+
+        assertThat(comments).isNotNull().hasSize(5)
                 .allMatch(bc -> !bc.getText().equals(""))
                 .allMatch(bc -> bc.getBook() != null);
 
-        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(3L);
+        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1L);
     }
 
     @DisplayName("должен корректно сохранять всю информацию о комментарии")
@@ -68,7 +68,13 @@ public class BookCommentRepositoryJpaTest {
                 .name("Роман")
                 .build();
 
-        Book warAndPeace = Book.builder().build();
+        Book warAndPeace = Book.builder()
+                .id(0)
+                .name("Война и мир")
+                .yearOfPublication("1867")
+                .author(author)
+                .genre(genre)
+                .build();
 
         BookComment comment = BookComment.builder()
                 .id(0)
@@ -77,36 +83,25 @@ public class BookCommentRepositoryJpaTest {
                 .book(warAndPeace)
                 .build();
 
-        List<BookComment> comments = Collections.singletonList(comment);
-
-        warAndPeace = warAndPeace.toBuilder()
-                .id(0)
-                .name("Война и мир")
-                .yearOfPublication("1867")
-                .author(author)
-                .genre(genre)
-                .comments(comments)
-                .build();
-
         repository.save(comment);
-        assertThat(warAndPeace.getId()).isGreaterThan(0);
+        assertThat(comment.getId()).isGreaterThan(0L);
 
-//        val actualStudent = em.find(OtusStudent.class, vasya.getId());
-//        assertThat(actualStudent).isNotNull().matches(s -> !s.getName().equals(""))
-//                .matches(s -> s.getCourses() != null && s.getCourses().size() > 0 && s.getCourses().get(0).getId() > 0)
-//                .matches(s -> s.getAvatar() != null)
-//                .matches(s -> s.getEmails() != null && s.getEmails().size() > 0);
+        BookComment actualComment = em.find(BookComment.class, comment.getId());
+        assertThat(actualComment).isNotNull().matches(bc -> !bc.getText().equals(""))
+                .matches(bc -> bc.getBook() != null && !bc.getBook().getName().equals(""))
+                .matches(bc -> bc.getBook().getAuthor().getId() > 0L)
+                .matches(bc -> bc.getBook().getGenre().getId() > 0L);
     }
 
     @DisplayName("должен изменять текст комментария по id")
     @Test
     void shouldUpdateCommentTextById() {
-        BookComment firstComment = em.find(BookComment.class, 1);
+        BookComment firstComment = em.find(BookComment.class, 1L);
         String oldText = firstComment.getText();
         em.detach(firstComment);
 
-        repository.updateTextById(1, "New Text");
-        BookComment updatedComment = em.find(BookComment.class, 1);
+        repository.updateTextById(1L, "New Text");
+        BookComment updatedComment = em.find(BookComment.class, 1L);
 
         assertThat(updatedComment.getText()).isNotEqualTo(oldText).isEqualTo("New Text");
     }
@@ -114,12 +109,12 @@ public class BookCommentRepositoryJpaTest {
     @DisplayName("должен удалять заданный комментарий по id")
     @Test
     void shouldDeleteBookById() {
-        BookComment fourthComment = em.find(BookComment.class, 4);
+        BookComment fourthComment = em.find(BookComment.class, 4L);
         assertThat(fourthComment).isNotNull();
         em.detach(fourthComment);
 
-        repository.deleteById(4);
-        BookComment deletedComment = em.find(BookComment.class, 4);
+        repository.deleteById(4L);
+        BookComment deletedComment = em.find(BookComment.class, 4L);
         assertThat(deletedComment).isNull();
     }
 }

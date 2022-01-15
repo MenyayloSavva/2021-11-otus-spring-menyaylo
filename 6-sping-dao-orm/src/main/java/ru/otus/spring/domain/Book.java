@@ -6,14 +6,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,6 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.List;
 import java.util.Objects;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Книга.
@@ -40,35 +38,31 @@ public final class Book {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final int id;
+    private final long id;
 
     /**
      * Название книги.
      */
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private final String name;
 
     /**
      * Год издания.
      */
-    @Column(name = "year_of_publication", nullable = false, unique = true)
+    @Column(name = "year_of_publication")
     private final String yearOfPublication;
 
     /**
      * Автор.
      */
-    @Fetch(FetchMode.SELECT)
-    @BatchSize(size = 10)
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "author_id")
     private final Author author;
 
     /**
      * Жанр.
      */
-    @Fetch(FetchMode.SELECT)
-    @BatchSize(size = 10)
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "genre_id")
     private final Genre genre;
 
@@ -76,7 +70,7 @@ public final class Book {
      * Комментарий.
      */
     @Setter(AccessLevel.NONE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book")
     private final List<BookComment> comments;
 
 
@@ -100,8 +94,8 @@ public final class Book {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", yearOfPublication='" + yearOfPublication + '\'' +
-                ", author_id='" + author.getId() + '\'' +
-                ", genre_id='" + genre.getId() + '\'' +
+                ", author_id=" + (nonNull(author) ? author.getId() : "null") +
+                ", genre_id=" + (nonNull(author) ? genre.getId() : "null") +
                 '}';
     }
 }

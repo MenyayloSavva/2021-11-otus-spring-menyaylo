@@ -33,8 +33,8 @@ public class BookRepositoryJpaTest {
     @DisplayName("должен загружать информацию о нужной книге по id")
     @Test
     void shouldFindExpectedBookById() {
-        Optional<Book> actualBook = repository.findById(1);
-        Book expectedBook = em.find(Book.class, 1);
+        Optional<Book> actualBook = repository.findById(1L);
+        Book expectedBook = em.find(Book.class, 1L);
         assertThat(actualBook).isPresent().get().usingRecursiveComparison().isEqualTo(expectedBook);
     }
 
@@ -46,40 +46,40 @@ public class BookRepositoryJpaTest {
         sessionFactory.getStatistics().setStatisticsEnabled(true);
 
         List<Book> books = repository.findAll();
-        assertThat(books).isNotNull().hasSize(3)
+
+        assertThat(books).isNotNull().hasSize(4)
                 .allMatch(b -> !b.getName().equals(""))
                 .allMatch(b -> b.getGenre() != null)
                 .allMatch(b -> b.getAuthor() != null);
-
-        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(3L);
+        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1L);
     }
 
     @DisplayName("должен корректно сохранять всю информацию о книге")
     @Test
     void shouldSaveAllBookInfo() {
         Author author = Author.builder()
-                .id(0)
+                .id(0L)
                 .country("Russia")
                 .birthDate(LocalDate.of(1828, 9, 9))
                 .name("Лев Николаевич Толстой")
                 .build();
 
         Genre genre = Genre.builder()
-                .id(0)
+                .id(0L)
                 .name("Роман")
                 .build();
 
         Book warAndPeace = Book.builder().build();
 
         List<BookComment> comments = Collections.singletonList(BookComment.builder()
-                .id(0)
+                .id(0L)
                 .text("«Война и мир» — одно из высших достижений художественного гения Толстого. " +
                         "Книга потребовала от писателя громадных усилий.")
                 .book(warAndPeace)
                 .build());
 
         warAndPeace = warAndPeace.toBuilder()
-                .id(0)
+                .id(0L)
                 .name("Война и мир")
                 .yearOfPublication("1867")
                 .author(author)
@@ -90,17 +90,17 @@ public class BookRepositoryJpaTest {
         repository.save(warAndPeace);
         assertThat(warAndPeace.getId()).isGreaterThan(0);
 
-//        val actualStudent = em.find(OtusStudent.class, vasya.getId());
-//        assertThat(actualStudent).isNotNull().matches(s -> !s.getName().equals(""))
-//                .matches(s -> s.getCourses() != null && s.getCourses().size() > 0 && s.getCourses().get(0).getId() > 0)
-//                .matches(s -> s.getAvatar() != null)
-//                .matches(s -> s.getEmails() != null && s.getEmails().size() > 0);
+        Book actualBook = em.find(Book.class, warAndPeace.getId());
+        assertThat(actualBook).isNotNull().matches(b -> !b.getName().equals(""))
+                .matches(b -> b.getAuthor() != null && b.getAuthor().getId() > 0L)
+                .matches(b -> b.getGenre() != null && b.getGenre().getId() > 0L)
+                .matches(b -> b.getComments() != null && b.getComments().size() > 0 && b.getComments().get(0).getId() > 0L);
     }
 
     @DisplayName("должен загружать информацию о нужной книге по имени")
     @Test
     void shouldFindExpectedBookByName() {
-        Book firstBook = em.find(Book.class, 2);
+        Book firstBook = em.find(Book.class, 2L);
         List<Book> books = repository.findByName("Евгений Онегин");
         assertThat(books).containsOnlyOnce(firstBook);
     }
@@ -108,12 +108,12 @@ public class BookRepositoryJpaTest {
     @DisplayName("должен изменять имя книги по её id")
     @Test
     void shouldUpdateBookNameById() {
-        Book firstBook = em.find(Book.class, 1);
+        Book firstBook = em.find(Book.class, 1L);
         String oldName = firstBook.getName();
         em.detach(firstBook);
 
-        repository.updateNameById(1, "Вино из одуванчиков");
-        Book updatedBook = em.find(Book.class, 1);
+        repository.updateNameById(1L, "Вино из одуванчиков");
+        Book updatedBook = em.find(Book.class, 1L);
 
         assertThat(updatedBook.getName()).isNotEqualTo(oldName).isEqualTo("Вино из одуванчиков");
     }
@@ -121,12 +121,12 @@ public class BookRepositoryJpaTest {
     @DisplayName("должен удалять заданную книгу по id")
     @Test
     void shouldDeleteBookById() {
-        Book thirdBook = em.find(Book.class, 3);
+        Book thirdBook = em.find(Book.class, 3L);
         assertThat(thirdBook).isNotNull();
         em.detach(thirdBook);
 
-        repository.deleteById(3);
-        Book deletedBook = em.find(Book.class, 3);
+        repository.deleteById(3L);
+        Book deletedBook = em.find(Book.class, 3L);
         assertThat(deletedBook).isNull();
     }
 }

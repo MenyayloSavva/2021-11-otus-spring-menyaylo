@@ -31,24 +31,24 @@ public final class Author {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final int id;
+    private final long id;
 
     /**
      * Имя автора
      */
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private final String name;
 
     /**
      * Страна.
      */
-    @Column(name = "country", nullable = false, unique = true)
+    @Column(name = "country")
     private final String country;
 
     /**
      * Дата рождения.
      */
-    @Column(name = "birth_date", nullable = false, unique = true)
+    @Column(name = "birth_date")
     private final LocalDate birthDate;
 
 

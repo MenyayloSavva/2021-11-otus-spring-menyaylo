@@ -11,7 +11,7 @@ import ru.otus.spring.repository.GenreRepositoryJpa;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,15 +31,15 @@ public class GenreServiceImplTest {
     void shouldFindGenreById() {
         Genre expectedGenre = createGenre();
 
-        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(expectedGenre));
-        Optional<Genre> actualGenre = genreService.findById(1);
+        when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(expectedGenre));
+        Optional<Genre> actualGenre = genreService.findById(1L);
 
         assertThat(actualGenre).isPresent().get().usingRecursiveComparison().isEqualTo(expectedGenre);
-        verify(repository, times(1)).findById(anyInt());
+        verify(repository, times(1)).findById(anyLong());
     }
 
 
     private Genre createGenre() {
-        return new Genre(1, "Любовная проза");
+        return new Genre(1L, "Любовная проза");
     }
 }

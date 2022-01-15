@@ -30,12 +30,12 @@ public final class Genre {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final int id;
+    private final long id;
 
     /**
      * Название жанра.
      */
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false)
     private final String name;
 
 

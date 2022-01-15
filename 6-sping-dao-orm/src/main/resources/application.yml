@@ -9,15 +9,11 @@ spring:
 #      enabled: false
 
   jpa:
-    generate-ddl: false
+    generate-ddl: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
 
     show-sql: true
 
   main:
     allow-circular-references: true
-
-logging:
-  level:
-    ROOT: ERROR

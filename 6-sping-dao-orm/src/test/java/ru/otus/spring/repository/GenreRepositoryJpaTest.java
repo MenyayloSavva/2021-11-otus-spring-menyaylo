@@ -26,8 +26,8 @@ public class GenreRepositoryJpaTest {
     @DisplayName("должен загружать информацию о нужном жанре по id")
     @Test
     void shouldFindExpectedGenreById() {
-        Optional<Genre> actualGenre = repository.findById(1);
-        Genre expectedGenre = em.find(Genre.class, 1);
+        Optional<Genre> actualGenre = repository.findById(1L);
+        Genre expectedGenre = em.find(Genre.class, 1L);
         assertThat(actualGenre).isPresent().get().usingRecursiveComparison().isEqualTo(expectedGenre);
     }
 }

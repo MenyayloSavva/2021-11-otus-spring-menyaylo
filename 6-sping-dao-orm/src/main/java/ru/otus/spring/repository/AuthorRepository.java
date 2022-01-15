@@ -5,5 +5,5 @@ import ru.otus.spring.domain.Author;
 import java.util.Optional;
 
 public interface AuthorRepository {
-    Optional<Author> findById(int id);
+    Optional<Author> findById(long id);
 }

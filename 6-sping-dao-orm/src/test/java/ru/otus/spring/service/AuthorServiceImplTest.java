@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,15 +32,15 @@ public class AuthorServiceImplTest {
     void shouldFindGenreById() {
         Author expectedAuthor = createAuthor();
 
-        when(repository.findById(anyInt())).thenReturn(Optional.ofNullable(expectedAuthor));
-        Optional<Author> actualAuthor = authorService.findById(1);
+        when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(expectedAuthor));
+        Optional<Author> actualAuthor = authorService.findById(1L);
 
         assertThat(actualAuthor).isPresent().get().usingRecursiveComparison().isEqualTo(expectedAuthor);
-        verify(repository, times(1)).findById(anyInt());
+        verify(repository, times(1)).findById(anyLong());
     }
 
 
     private Author createAuthor() {
-        return new Author(1, "Vasiliy Ivanov", "Russia", LocalDate.of(1900, 1, 1));
+        return new Author(1L, "Vasiliy Ivanov", "Russia", LocalDate.of(1900, 1, 1));
     }
 }

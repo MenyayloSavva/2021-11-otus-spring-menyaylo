@@ -27,11 +27,11 @@ public class ApplicationCommands {
 
     @ShellMethod(value = "Save book", key = {"sb"})
     public String saveBook(
-            @ShellOption int id,
+            @ShellOption long id,
             @ShellOption String name,
             @ShellOption(defaultValue = "9999") String year,
-            @ShellOption(defaultValue = "1") int authorId,
-            @ShellOption(defaultValue = "1") int genreId
+            @ShellOption(defaultValue = "1") long authorId,
+            @ShellOption(defaultValue = "1") long genreId
     ) {
         Optional<Author> author = authorService.findById(authorId);
         Optional<Genre> genre = genreService.findById(genreId);
@@ -42,7 +42,7 @@ public class ApplicationCommands {
 
     @ShellMethod(value = "Find book by id", key = {"fb"})
     public String findBookById(
-            @ShellOption int id
+            @ShellOption long id
     ) {
         Optional<Book> book = bookService.findById(id);
         return book.isPresent() ? String.format("Book has been found: %s", book) : String.format("Book hasn't been found!");
@@ -64,7 +64,7 @@ public class ApplicationCommands {
 
     @ShellMethod(value = "Update book name by id", key = {"ubn"})
     public String updateBookNameById(
-            @ShellOption int id,
+            @ShellOption long id,
             @ShellOption String name
     ) {
         bookService.updateNameById(id, name);
@@ -73,7 +73,7 @@ public class ApplicationCommands {
 
     @ShellMethod(value = "Delete book by id", key = {"db"})
     public String deleteBookById(
-            @ShellOption int id
+            @ShellOption long id
     ) {
         bookService.deleteById(id);
         return String.format("Book has been deleted!");
@@ -82,7 +82,7 @@ public class ApplicationCommands {
 
     @ShellMethod(value = "Save book comment", key = {"sbc"})
     public String saveBookComment(
-            @ShellOption int id,
+            @ShellOption long id,
             @ShellOption String text,
             @ShellOption(defaultValue = "1") int bookId
     ) {
@@ -94,7 +94,7 @@ public class ApplicationCommands {
 
     @ShellMethod(value = "Find book comment by id", key = {"fbc"})
     public String findBookCommentById(
-            @ShellOption int id
+            @ShellOption long id
     ) {
         Optional<BookComment> bookComment = bookCommentService.findById(id);
         return bookComment.isPresent() ? String.format("Book comment has been found: %s", bookComment) :
@@ -109,7 +109,7 @@ public class ApplicationCommands {
 
     @ShellMethod(value = "Update book comment text by id", key = {"ubct"})
     public String updateBookCommentTextById(
-            @ShellOption int id,
+            @ShellOption long id,
             @ShellOption String text
     ) {
         bookCommentService.updateTextById(id, text);
@@ -118,7 +118,7 @@ public class ApplicationCommands {
 
     @ShellMethod(value = "Delete book comment by id", key = {"dbc"})
     public String deleteBookCommentById(
-            @ShellOption int id
+            @ShellOption long id
     ) {
         bookCommentService.deleteById(id);
         return String.format("Book comment has been deleted!");

@@ -5,5 +5,5 @@ import ru.otus.spring.domain.Genre;
 import java.util.Optional;
 
 public interface GenreService {
-    Optional<Genre> findById(int id);
+    Optional<Genre> findById(long id);
 }

@@ -23,7 +23,7 @@ public class BookCommentServiceImpl implements BookCommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<BookComment> findById(int id) {
+    public Optional<BookComment> findById(long id) {
         return repository.findById(id);
     }
 
@@ -35,13 +35,13 @@ public class BookCommentServiceImpl implements BookCommentService {
 
     @Override
     @Transactional
-    public void updateTextById(int id, String text) {
+    public void updateTextById(long id, String text) {
         repository.updateTextById(id, text);
     }
 
     @Override
     @Transactional
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         repository.deleteById(id);
     }
 }

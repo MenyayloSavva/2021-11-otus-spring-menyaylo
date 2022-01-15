@@ -29,14 +29,16 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    public Optional<Book> findById(int id) {
+    public Optional<Book> findById(long id) {
         return Optional.ofNullable(em.find(Book.class, id));
     }
 
     @Override
     public List<Book> findAll() {
-        return em.createQuery("select b from Book b", Book.class)
-                .getResultList();
+        return em.createQuery("select b from Book b " +
+                        "left join fetch b.author " +
+                        "left join fetch b.genre",
+                Book.class).getResultList();
     }
 
     @Override
@@ -50,7 +52,7 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    public void updateNameById(int id, String name) {
+    public void updateNameById(long id, String name) {
         Query query = em.createQuery("update Book b " +
                 "set b.name = :name " +
                 "where b.id = :id");
@@ -60,7 +62,7 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(long id) {
         Query query = em.createQuery("delete " +
                 "from Book b " +
                 "where b.id = :id");

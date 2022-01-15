@@ -26,8 +26,8 @@ public class AuthorRepositoryJpaTest {
     @DisplayName("должен загружать информацию о нужной книге по id")
     @Test
     void shouldFindExpectedAuthorById() {
-        Optional<Author> actualAuthor = repository.findById(1);
-        Author expectedAuthor = em.find(Author.class, 1);
+        Optional<Author> actualAuthor = repository.findById(1L);
+        Author expectedAuthor = em.find(Author.class, 1L);
         assertThat(actualAuthor).isPresent().get().usingRecursiveComparison().isEqualTo(expectedAuthor);
     }
 }
