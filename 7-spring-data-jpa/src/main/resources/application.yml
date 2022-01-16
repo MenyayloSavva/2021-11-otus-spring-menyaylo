@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+  sql:
+    init:
+      mode: never
+#  shell:
+#    interactive:
+#      enabled: false
+
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+
+    show-sql: true
+
+  main:
+    allow-circular-references: true
