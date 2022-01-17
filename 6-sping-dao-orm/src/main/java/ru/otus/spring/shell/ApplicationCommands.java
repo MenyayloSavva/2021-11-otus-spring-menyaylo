@@ -101,6 +101,14 @@ public class ApplicationCommands {
                 String.format("Book comment hasn't been found!");
     }
 
+    @ShellMethod(value = "Find book comments by book_id", key = {"fbcb"})
+    public String findBookCommentByBookId(
+            @ShellOption long id
+    ) {
+        List<BookComment> bookComments = bookCommentService.findByBookId(id);
+        return String.format("All found book comments: %s", bookComments);
+    }
+
     @ShellMethod(value = "Find all book comments", key = {"fabc"})
     public String findAllBookComments() {
         List<BookComment> bookComments = bookCommentService.findAll();
