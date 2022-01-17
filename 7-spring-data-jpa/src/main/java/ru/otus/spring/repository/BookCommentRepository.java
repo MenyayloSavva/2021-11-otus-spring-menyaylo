@@ -14,6 +14,8 @@ public interface BookCommentRepository extends JpaRepository<BookComment, Long> 
     @EntityGraph(value = "graph.BookComment")
     List<BookComment> findAll();
 
+    List<BookComment> findByBook_Id(long bookId);
+
     @Modifying
     @Query("UPDATE BookComment bc SET bc.text = :text WHERE bc.id = :id")
     void updateTextById(@Param("id") long id, @Param("text") String text);

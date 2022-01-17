@@ -22,7 +22,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Optional<Book> findById(long id) {
         return repository.findById(id);
     }
@@ -34,7 +33,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Book> findByName(String name) {
         return repository.findByName(name);
     }

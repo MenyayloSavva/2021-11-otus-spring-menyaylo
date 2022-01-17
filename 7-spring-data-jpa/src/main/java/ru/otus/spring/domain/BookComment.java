@@ -1,9 +1,10 @@
 package ru.otus.spring.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,8 +24,9 @@ import java.util.Objects;
  * Комментарий к книге.
  */
 @Getter
-@RequiredArgsConstructor
-@NoArgsConstructor(force = true)
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder(toBuilder = true)
 @Entity
 @Table(name = "book_comments")
@@ -41,20 +43,20 @@ public final class BookComment {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final long id;
+    private long id;
 
     /**
      * Текст.
      */
     @Column(name = "text", nullable = false)
-    private final String text;
+    private String text;
 
     /**
      * Книга.
      */
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "book_id")
-    private final Book book;
+    private Book book;
 
 
     @Override

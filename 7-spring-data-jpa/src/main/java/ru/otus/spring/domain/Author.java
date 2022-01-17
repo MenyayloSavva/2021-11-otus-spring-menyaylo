@@ -1,9 +1,10 @@
 package ru.otus.spring.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,8 +19,9 @@ import java.util.Objects;
  * Автор книги.
  */
 @Getter
-@RequiredArgsConstructor
-@NoArgsConstructor(force = true)
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder(toBuilder = true)
 @Entity
 @Table(name = "authors")
@@ -29,25 +31,25 @@ public final class Author {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final long id;
+    private long id;
 
     /**
      * Имя автора
      */
     @Column(name = "name", nullable = false)
-    private final String name;
+    private String name;
 
     /**
      * Страна.
      */
     @Column(name = "country")
-    private final String country;
+    private String country;
 
     /**
      * Дата рождения.
      */
     @Column(name = "birth_date")
-    private final LocalDate birthDate;
+    private LocalDate birthDate;
 
 
     @Override

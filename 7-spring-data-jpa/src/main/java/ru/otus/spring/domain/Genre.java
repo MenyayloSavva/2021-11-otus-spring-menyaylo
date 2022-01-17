@@ -1,9 +1,10 @@
 package ru.otus.spring.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,8 +18,9 @@ import java.util.Objects;
  * Жанр книги.
  */
 @Getter
-@RequiredArgsConstructor
-@NoArgsConstructor(force = true)
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder(toBuilder = true)
 @Entity
 @Table(name = "genres")
@@ -28,13 +30,13 @@ public final class Genre {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final long id;
+    private long id;
 
     /**
      * Название жанра.
      */
     @Column(name = "name", nullable = false)
-    private final String name;
+    private String name;
 
 
     @Override
