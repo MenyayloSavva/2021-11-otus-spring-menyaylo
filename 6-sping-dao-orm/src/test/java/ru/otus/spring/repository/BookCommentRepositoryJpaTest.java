@@ -93,19 +93,6 @@ public class BookCommentRepositoryJpaTest {
                 .matches(bc -> bc.getBook().getGenre().getId() > 0L);
     }
 
-    @DisplayName("должен изменять текст комментария по id")
-    @Test
-    void shouldUpdateCommentTextById() {
-        BookComment firstComment = em.find(BookComment.class, 1L);
-        String oldText = firstComment.getText();
-        em.detach(firstComment);
-
-        repository.updateTextById(1L, "New Text");
-        BookComment updatedComment = em.find(BookComment.class, 1L);
-
-        assertThat(updatedComment.getText()).isNotEqualTo(oldText).isEqualTo("New Text");
-    }
-
     @DisplayName("должен удалять заданный комментарий по id")
     @Test
     void shouldDeleteBookById() {

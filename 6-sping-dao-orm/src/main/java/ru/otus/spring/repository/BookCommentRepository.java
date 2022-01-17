@@ -12,7 +12,5 @@ public interface BookCommentRepository {
 
     List<BookComment> findAll();
 
-    void updateTextById(long id, String text);
-
     void deleteById(long id);
 }

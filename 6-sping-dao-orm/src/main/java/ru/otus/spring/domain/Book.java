@@ -1,6 +1,5 @@
 package ru.otus.spring.domain;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,40 +37,39 @@ public final class Book {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final long id;
+    private long id;
 
     /**
      * Название книги.
      */
     @Column(name = "name", nullable = false)
-    private final String name;
+    private String name;
 
     /**
      * Год издания.
      */
     @Column(name = "year_of_publication")
-    private final String yearOfPublication;
+    private String yearOfPublication;
 
     /**
      * Автор.
      */
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
     @JoinColumn(name = "author_id")
-    private final Author author;
+    private Author author;
 
     /**
      * Жанр.
      */
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
     @JoinColumn(name = "genre_id")
-    private final Genre genre;
+    private Genre genre;
 
     /**
      * Комментарий.
      */
-    @Setter(AccessLevel.NONE)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book")
-    private final List<BookComment> comments;
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, mappedBy = "book")
+    private List<BookComment> comments;
 
 
     @Override

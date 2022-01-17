@@ -45,20 +45,20 @@ public final class BookComment {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final long id;
+    private long id;
 
     /**
      * Текст.
      */
     @Column(name = "text", nullable = false)
-    private final String text;
+    private String text;
 
     /**
      * Книга.
      */
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
     @JoinColumn(name = "book_id")
-    private final Book book;
+    private Book book;
 
 
     @Override

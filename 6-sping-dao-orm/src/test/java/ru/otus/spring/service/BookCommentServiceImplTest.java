@@ -15,7 +15,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -52,6 +51,21 @@ public class BookCommentServiceImplTest {
         verify(repository, times(1)).findById(anyLong());
     }
 
+    @DisplayName("возвращать список всех комментариев по id книги")
+    @Test
+    void shouldFindByBookId() {
+        BookComment expectedComment1 = createBookComment();
+        BookComment expectedComment2 = createBookComment();
+
+        when(repository.findAll()).thenReturn(List.of(expectedComment1, expectedComment2));
+        List<BookComment> actualCommentList = bookCommentService.findByBookId(999L);
+
+        assertThat(actualCommentList).hasSize(2)
+                .allMatch(bc -> bc.getText().equals("Some comment text"))
+                .allMatch(bc -> bc.getBook() != null);
+        verify(repository, times(1)).findAll();
+    }
+
     @DisplayName("возвращать список всех комментариев")
     @Test
     void shouldFindAll() {
@@ -70,10 +84,16 @@ public class BookCommentServiceImplTest {
     @DisplayName("обновлять текст комментария по id")
     @Test
     void shouldUpdateTextById() {
-        bookCommentService.updateTextById(1L, "New Comment Text");
+        BookComment givenComment = createBookComment();
 
-        verify(repository, times(1)).updateTextById(anyLong(), anyString());
+        when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(givenComment));
+        Optional<BookComment> actualBookComment = bookCommentService.findById(1L);
+        bookCommentService.updateTextById(1L, "New comment text");
+
+        assertThat(actualBookComment).isPresent().get().matches(bc -> bc.getText().equals("New comment text"));
+        verify(repository, times(2)).findById(anyLong());
     }
+
 
     @DisplayName("удалять комментарий по id")
     @Test
@@ -85,7 +105,9 @@ public class BookCommentServiceImplTest {
 
 
     private BookComment createBookComment() {
-        Book book = new Book();
+        Book book = Book.builder()
+                .id(999L)
+                .build();
         return new BookComment(1L, "Some comment text", book);
     }
 }

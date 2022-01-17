@@ -92,9 +92,14 @@ public class BookServiceImplTest {
     @DisplayName("обновлять имя книги по id")
     @Test
     void shouldUpdateBookById() {
+        Book givenBook = createBook();
+
+        when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(givenBook));
+        Optional<Book> actualBook = bookService.findById(1L);
         bookService.updateNameById(1L, "New Book Name");
 
-        verify(repository, times(1)).updateNameById(anyLong(), anyString());
+        assertThat(actualBook).isPresent().get().matches(b -> b.getName().equals("New Book Name"));
+        verify(repository, times(2)).findById(anyLong());
     }
 
     @DisplayName("удалять книгу по id")

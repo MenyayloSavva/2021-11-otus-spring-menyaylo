@@ -7,7 +7,6 @@ import ru.otus.spring.domain.BookComment;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +17,6 @@ public class BookCommentRepositoryJpa implements BookCommentRepository {
 
     @PersistenceContext
     private final EntityManager em;
-
 
     @Override
     public BookComment save(BookComment comment) {
@@ -44,21 +42,8 @@ public class BookCommentRepositoryJpa implements BookCommentRepository {
     }
 
     @Override
-    public void updateTextById(long id, String text) {
-        Query query = em.createQuery("update BookComment bc " +
-                "set bc.text = :text " +
-                "where bc.id = :id");
-        query.setParameter("text", text);
-        query.setParameter("id", id);
-        query.executeUpdate();
-    }
-
-    @Override
     public void deleteById(long id) {
-        Query query = em.createQuery("delete " +
-                "from BookComment bc " +
-                "where bc.id = :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+        Optional<BookComment> bookComment = findById(id);
+        bookComment.ifPresent(bc -> em.remove(bc));
     }
 }

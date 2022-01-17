@@ -10,6 +10,8 @@ public interface BookCommentService {
 
     Optional<BookComment> findById(long id);
 
+    List<BookComment> findByBookId(long bookId);
+
     List<BookComment> findAll();
 
     void updateTextById(long id, String text);
