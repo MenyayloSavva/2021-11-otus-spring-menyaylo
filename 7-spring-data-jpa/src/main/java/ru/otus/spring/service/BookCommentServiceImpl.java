@@ -8,7 +8,6 @@ import ru.otus.spring.repository.BookCommentRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,9 +28,7 @@ public class BookCommentServiceImpl implements BookCommentService {
 
     @Override
     public List<BookComment> findByBookId(long id) {
-        return repository.findAll().stream()
-                .filter(bc -> bc.getBook().getId() == id)
-                .collect(Collectors.toList());
+        return repository.findByBook_Id(id);
     }
 
     @Override
