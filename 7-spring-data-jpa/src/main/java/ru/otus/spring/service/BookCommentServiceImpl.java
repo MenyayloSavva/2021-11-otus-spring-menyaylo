@@ -37,11 +37,11 @@ public class BookCommentServiceImpl implements BookCommentService {
         return repository.findAll();
     }
 
-
     @Override
     @Transactional
     public void updateTextById(long id, String text) {
-        repository.updateTextById(id, text);
+        Optional<BookComment> bookComment = repository.findById(id);
+        bookComment.ifPresent(bc -> bc.setText(text));
     }
 
     @Override

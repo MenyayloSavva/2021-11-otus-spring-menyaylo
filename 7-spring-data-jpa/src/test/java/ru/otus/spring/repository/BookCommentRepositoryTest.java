@@ -41,17 +41,4 @@ public class BookCommentRepositoryTest {
 
         assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1L);
     }
-
-    @DisplayName("должен изменять текст комментария по id")
-    @Test
-    void shouldUpdateTextById() {
-        BookComment firstComment = em.find(BookComment.class, 1L);
-        String oldText = firstComment.getText();
-        em.detach(firstComment);
-
-        repository.updateTextById(1L, "New Text");
-        BookComment updatedComment = em.find(BookComment.class, 1L);
-
-        assertThat(updatedComment.getText()).isNotEqualTo(oldText).isEqualTo("New Text");
-    }
 }

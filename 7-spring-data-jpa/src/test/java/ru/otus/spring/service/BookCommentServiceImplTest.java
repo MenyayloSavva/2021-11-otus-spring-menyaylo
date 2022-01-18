@@ -15,7 +15,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -70,9 +69,14 @@ public class BookCommentServiceImplTest {
     @DisplayName("обновлять текст комментария по id")
     @Test
     void shouldUpdateTextById() {
-        bookCommentService.updateTextById(1L, "New Comment Text");
+        BookComment givenComment = createBookComment();
 
-        verify(repository, times(1)).updateTextById(anyLong(), anyString());
+        when(repository.findById(anyLong())).thenReturn(Optional.ofNullable(givenComment));
+        Optional<BookComment> actualBookComment = bookCommentService.findById(1L);
+        bookCommentService.updateTextById(1L, "New comment text");
+
+        assertThat(actualBookComment).isPresent().get().matches(bc -> bc.getText().equals("New comment text"));
+        verify(repository, times(2)).findById(anyLong());
     }
 
     @DisplayName("удалять комментарий по id")

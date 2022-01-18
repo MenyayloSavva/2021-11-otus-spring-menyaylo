@@ -39,17 +39,4 @@ public class BookRepositoryTest {
                 .allMatch(b -> b.getAuthor() != null);
         assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1L);
     }
-
-    @DisplayName("должен изменять имя книги по её id")
-    @Test
-    void shouldUpdateBookNameById() {
-        Book firstBook = em.find(Book.class, 1L);
-        String oldName = firstBook.getName();
-        em.detach(firstBook);
-
-        repository.updateNameById(1L, "Вино из одуванчиков");
-        Book updatedBook = em.find(Book.class, 1L);
-
-        assertThat(updatedBook.getName()).isNotEqualTo(oldName).isEqualTo("Вино из одуванчиков");
-    }
 }
