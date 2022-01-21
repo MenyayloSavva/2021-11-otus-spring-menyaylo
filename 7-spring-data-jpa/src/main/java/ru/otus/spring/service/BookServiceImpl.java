@@ -16,7 +16,6 @@ public class BookServiceImpl implements BookService {
     private final BookRepository repository;
 
     @Override
-    @Transactional
     public void save(Book book) {
         repository.save(book);
     }
@@ -27,7 +26,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Book> findAll() {
         return repository.findAll();
     }
@@ -45,7 +43,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
     public void deleteById(long id) {
         repository.deleteById(id);
     }

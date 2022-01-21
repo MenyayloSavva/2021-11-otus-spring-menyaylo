@@ -16,7 +16,6 @@ public class BookCommentServiceImpl implements BookCommentService {
     private final BookCommentRepository repository;
 
     @Override
-    @Transactional
     public void save(BookComment comment) {
         repository.save(comment);
     }
@@ -32,7 +31,6 @@ public class BookCommentServiceImpl implements BookCommentService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<BookComment> findAll() {
         return repository.findAll();
     }
@@ -45,7 +43,6 @@ public class BookCommentServiceImpl implements BookCommentService {
     }
 
     @Override
-    @Transactional
     public void deleteById(long id) {
         repository.deleteById(id);
     }
