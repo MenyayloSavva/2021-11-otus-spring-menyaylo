@@ -1,19 +1,24 @@
 package ru.otus.spring.dao;
 
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.otus.spring.domain.Item;
 import ru.otus.spring.input.FileReader;
 
 import java.util.List;
 
 @SuppressWarnings({"unchecked", "unused"})
+@Component
 public class ItemDaoCsv implements ItemDao {
 
-    private String pathToCsv;
     private FileReader fileReader;
 
-    public ItemDaoCsv(String pathToCsv, FileReader fileReader) {
-        this.pathToCsv = pathToCsv;
+    @Value("${paths.path_to_csv}")
+    private String pathToCsv;
+
+    public ItemDaoCsv(FileReader fileReader) {
         this.fileReader = fileReader;
     }
 

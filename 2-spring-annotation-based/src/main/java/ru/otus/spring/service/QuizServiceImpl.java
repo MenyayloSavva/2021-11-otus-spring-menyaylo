@@ -1,19 +1,21 @@
 package ru.otus.spring.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import ru.otus.spring.domain.Item;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class QuestionnaireServiceImpl implements QuestionnaireService {
+@Service
+public class QuizServiceImpl implements QuizService {
 
     private final ItemService itemService;
 
     @Value("${answers.required_amount}")
     private int requiredAmount;
 
-    public QuestionnaireServiceImpl(ItemService itemService) {
+    public QuizServiceImpl(ItemService itemService) {
         this.itemService = itemService;
     }
 
@@ -38,6 +40,5 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
         System.out.println("\nDear, mr(s) " + fullName + ", your total score is " + score + ".");
         System.out.println(score >= requiredAmount ? "Quiz completed!" : "Quiz failed!");
-
     }
 }
