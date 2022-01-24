@@ -1,4 +1,4 @@
-package ru.otus.srping.service;
+package ru.otus.spring.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.spring.dao.ItemDao;
 import ru.otus.spring.domain.Item;
-import ru.otus.spring.service.ItemServiceImpl;
 
 import java.util.List;
 import java.util.Optional;

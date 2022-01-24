@@ -1,4 +1,4 @@
-package ru.otus.srping.dao;
+package ru.otus.spring.dao;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.otus.spring.dao.ItemDaoCsv;
 import ru.otus.spring.domain.Item;
 import ru.otus.spring.input.FileReaderImpl;
 
