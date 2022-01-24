@@ -2,23 +2,22 @@ package ru.otus.spring.dao;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import ru.otus.spring.domain.Item;
+import ru.otus.spring.input.FileReader;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-@SuppressWarnings({"unchecked", "unused"})
-public class ItemDaoSimple implements ItemDao {
+public class ItemDaoCsv implements ItemDao {
 
+    private FileReader fileReader;
     private String pathToCsv;
+
+    public ItemDaoCsv(FileReader fileReader) {
+        this.fileReader = fileReader;
+    }
 
     @Override
     public List<Item> findAll() {
-        InputStream in = getClass().getResourceAsStream(pathToCsv);
-        InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
-
-        return new CsvToBeanBuilder(reader)
+        return new CsvToBeanBuilder(fileReader.readData(pathToCsv))
                 .withType(Item.class)
                 .build()
                 .parse();
@@ -30,5 +29,13 @@ public class ItemDaoSimple implements ItemDao {
 
     public void setPathToCsv(String pathToCsv) {
         this.pathToCsv = pathToCsv;
+    }
+
+    public FileReader getFileReader() {
+        return fileReader;
+    }
+
+    public void setFileReader(FileReader fileReader) {
+        this.fileReader = fileReader;
     }
 }

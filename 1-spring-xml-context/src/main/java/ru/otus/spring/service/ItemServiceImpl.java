@@ -1,11 +1,13 @@
 package ru.otus.spring.service;
 
+import org.springframework.stereotype.Service;
 import ru.otus.spring.dao.ItemDao;
 import ru.otus.spring.domain.Item;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class ItemServiceImpl implements ItemService {
 
     private final ItemDao itemDao;

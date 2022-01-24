@@ -4,12 +4,19 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="itemDao" class="ru.otus.spring.dao.ItemDaoSimple">
+    <bean id="itemDao" class="ru.otus.spring.dao.ItemDaoCsv">
+        <constructor-arg name="fileReader" ref="fileReader"/>
         <property name="pathToCsv" value="/items.csv"/>
     </bean>
 
+    <bean id="fileReader" class="ru.otus.spring.input.FileReaderImpl"> </bean>
+
     <bean id="itemService" class="ru.otus.spring.service.ItemServiceImpl">
         <constructor-arg name="itemDao" ref="itemDao"/>
+    </bean>
+
+    <bean id="quizService" class="ru.otus.spring.service.QuizServiceImpl">
+        <constructor-arg name="itemService" ref="itemService"/>
     </bean>
 
 </beans>
