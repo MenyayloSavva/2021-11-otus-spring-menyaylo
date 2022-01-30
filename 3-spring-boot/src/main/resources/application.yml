@@ -1,0 +1,16 @@
+spring:
+  messages:
+    basename: i18n/quiz
+    encoding: UTF-8
+
+project:
+  language: russian #default
+  path:
+    -
+      language: default
+      path_to_csv: /items/items.csv
+    -
+      language: russian
+      path_to_csv: /items/items_ru_RU.csv
+  answer:
+    required_amount: 2
