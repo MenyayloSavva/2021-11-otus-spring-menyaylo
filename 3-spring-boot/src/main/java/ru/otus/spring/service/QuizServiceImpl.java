@@ -1,9 +1,9 @@
 package ru.otus.spring.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.configuration.ProjectConfigs;
+import ru.otus.spring.configuration.ResourceBundleMessageSourceLocalized;
 import ru.otus.spring.domain.Item;
 
 import java.util.List;
@@ -15,14 +15,14 @@ import java.util.Scanner;
 public class QuizServiceImpl implements QuizService {
 
     private final ItemService itemService;
-    private final MessageSource messageSource;
-    private final Locale locale;
+    private final ResourceBundleMessageSourceLocalized messageSource;
     private final ProjectConfigs projectConfigs;
 
     @Override
     public void interact() {
         Scanner scanner = new Scanner(System.in);
         List<Item> items = itemService.findAll();
+        Locale locale = messageSource.getCurrentLocale();
 
         System.out.println(messageSource.getMessage("strings.intro.message", null, locale));
         String fullName = scanner.nextLine();
