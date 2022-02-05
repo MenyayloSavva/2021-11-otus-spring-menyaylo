@@ -38,8 +38,9 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void updateNameById(long id, String name) {
-        Optional<Book> book = repository.findById(id);
-        book.ifPresent(b -> b.setName(name));
+        Book book = repository.findById(id).orElseThrow();
+        book.setName(name);
+        repository.save(book);
     }
 
     @Override

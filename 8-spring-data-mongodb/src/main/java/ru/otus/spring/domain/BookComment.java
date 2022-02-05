@@ -5,19 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.NamedSubgraph;
-import javax.persistence.Table;
 import java.util.Objects;
 
 /**
@@ -28,34 +20,24 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-@Entity
-@Table(name = "book_comments")
-@NamedEntityGraph(name = "graph.BookComment",
-        attributeNodes = @NamedAttributeNode(value = "book", subgraph = "subgraph.Book"),
-        subgraphs = @NamedSubgraph(name = "subgraph.Book",
-                attributeNodes = {
-                        @NamedAttributeNode(value = "author"),
-                        @NamedAttributeNode(value = "genre")
-                }))
+@Document(collection = "book_comments")
 public final class BookComment {
     /**
      * Идентификатор комментария.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     /**
      * Текст.
      */
-    @Column(name = "text", nullable = false)
     private String text;
 
     /**
      * Книга.
      */
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "book_id")
+    @Field(name = "book_id")
+    @DocumentReference
     private Book book;
 
 

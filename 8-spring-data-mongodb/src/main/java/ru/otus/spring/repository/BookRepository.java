@@ -1,14 +1,10 @@
 package ru.otus.spring.repository;
 
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import ru.otus.spring.domain.Book;
 
 import java.util.List;
 
-public interface BookRepository extends JpaRepository<Book, Long> {
-    @EntityGraph(value = "graph.Book")
-    List<Book> findAll();
-
+public interface BookRepository extends MongoRepository<Book, Long> {
     List<Book> findByName(String name);
 }

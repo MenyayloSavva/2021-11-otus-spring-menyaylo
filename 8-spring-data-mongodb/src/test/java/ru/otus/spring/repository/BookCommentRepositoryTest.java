@@ -1,12 +1,9 @@
 package ru.otus.spring.repository;
 
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import ru.otus.spring.domain.BookComment;
 
 import java.util.List;
@@ -14,31 +11,21 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе Jpa для работы с книжными комментариями ")
-@DataJpaTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@DataMongoTest
 public class BookCommentRepositoryTest {
 
     @Autowired
     private BookCommentRepository repository;
 
-    @Autowired
-    private TestEntityManager em;
-
-    @DisplayName("должен загружать список всех комментариев с полной информацией о них")
+    @DisplayName("должен находить книжные комментарии по id книги")
     @Test
     void shouldReturnCommentsWithAllInfo() {
-        SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory()
-                .unwrap(SessionFactory.class);
-        sessionFactory.getStatistics().setStatisticsEnabled(true);
+        BookComment expectedComment = repository.findById(3L).orElseThrow();
 
-        List<BookComment> comments = repository.findAll();
+        List<BookComment> actualCommentList = repository.findByBook_Id(2L);
 
-        assertThat(comments).isNotNull().hasSize(5)
-                .allMatch(bc -> !bc.getText().equals(""))
-                .allMatch(bc -> bc.getBook() != null)
-                .allMatch(bc -> bc.getBook().getGenre() != null)
-                .allMatch(bc -> bc.getBook().getAuthor() != null);
-
-        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1L);
+        assertThat(actualCommentList).isNotNull()
+                .hasSize(1)
+                .containsOnly(expectedComment);
     }
 }

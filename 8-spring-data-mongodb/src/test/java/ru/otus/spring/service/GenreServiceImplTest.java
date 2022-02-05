@@ -16,7 +16,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest(properties = "mongock.enabled=false")
 @DisplayName("Service для работы с жанрами должен ")
 public class GenreServiceImplTest {
 

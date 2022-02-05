@@ -1,19 +1,22 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-  sql:
-    init:
-      mode: never
+  data:
+    mongodb:
+      database: library
+      host: localhost
+      port: 27017
 #  shell:
 #    interactive:
 #      enabled: false
-
-  jpa:
-    generate-ddl: true
-    hibernate:
-      ddl-auto: create
-
-    show-sql: true
-
   main:
     allow-circular-references: true
+
+
+mongock:
+  runner-type: "ApplicationRunner" # default
+  #runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.spring.mongock.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local

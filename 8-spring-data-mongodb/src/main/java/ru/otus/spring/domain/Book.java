@@ -5,19 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,51 +22,44 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-@Entity
-@Table(name = "books")
-@NamedEntityGraph(name = "graph.Book",
-        attributeNodes = {
-                @NamedAttributeNode(value = "author"),
-                @NamedAttributeNode(value = "genre")
-        })
+@Document(collection = "books")
 public final class Book {
     /**
      * Идентификатор книги.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     /**
      * Название книги.
      */
-    @Column(name = "name", nullable = false)
     private String name;
 
     /**
      * Год издания.
      */
-    @Column(name = "year_of_publication")
+    @Field(name = "year_of_publication")
     private String yearOfPublication;
 
     /**
      * Автор.
      */
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "author_id")
+    @Field(name = "author_id")
+    @DocumentReference
     private Author author;
 
     /**
      * Жанр.
      */
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "genre_id")
+    @Field(name = "genre_id")
+    @DocumentReference
     private Genre genre;
 
     /**
      * Комментарий.
      */
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "book")
+    @ReadOnlyProperty
+    @DocumentReference(lookup = "{'book':?#{#self._id} }")
     private List<BookComment> comments;
 
 

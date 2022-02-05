@@ -2,7 +2,6 @@ package ru.otus.spring.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.domain.BookComment;
 import ru.otus.spring.repository.BookCommentRepository;
 
@@ -36,10 +35,10 @@ public class BookCommentServiceImpl implements BookCommentService {
     }
 
     @Override
-    @Transactional
     public void updateTextById(long id, String text) {
-        Optional<BookComment> bookComment = repository.findById(id);
-        bookComment.ifPresent(bc -> bc.setText(text));
+        BookComment bookComment = repository.findById(id).orElseThrow();
+        bookComment.setText(text);
+        repository.save(bookComment);
     }
 
     @Override

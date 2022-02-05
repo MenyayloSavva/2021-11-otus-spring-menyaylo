@@ -14,7 +14,6 @@ import ru.otus.spring.service.BookService;
 import ru.otus.spring.service.GenreService;
 
 import java.util.List;
-import java.util.Optional;
 
 @ShellComponent
 @RequiredArgsConstructor
@@ -33,10 +32,9 @@ public class ApplicationCommands {
             @ShellOption(defaultValue = "1") long authorId,
             @ShellOption(defaultValue = "1") long genreId
     ) {
-        Optional<Author> author = authorService.findById(authorId);
-        ;
-        Optional<Genre> genre = genreService.findById(genreId);
-        Book book = new Book(id, name, year, author.orElse(null), genre.orElse(null), null);
+        Author author = authorService.findById(authorId).orElseThrow();
+        Genre genre = genreService.findById(genreId).orElseThrow();
+        Book book = new Book(id, name, year, author, genre, null);
         bookService.save(book);
         return String.format("Book has been saved: %s", book);
     }
@@ -45,8 +43,8 @@ public class ApplicationCommands {
     public String findBookById(
             @ShellOption long id
     ) {
-        Optional<Book> book = bookService.findById(id);
-        return book.isPresent() ? String.format("Book has been found: %s", book) : String.format("Book hasn't been found!");
+        Book book = bookService.findById(id).orElseThrow();
+        return String.format("Book has been found: %s", book);
     }
 
     @ShellMethod(value = "Find all books", key = {"fab"})
@@ -87,8 +85,8 @@ public class ApplicationCommands {
             @ShellOption String text,
             @ShellOption(defaultValue = "1") int bookId
     ) {
-        Optional<Book> book = bookService.findById(bookId);
-        BookComment bookComment = new BookComment(id, text, book.orElse(null));
+        Book book = bookService.findById(bookId).orElseThrow();
+        BookComment bookComment = new BookComment(id, text, book);
         bookCommentService.save(bookComment);
         return String.format("Book comment has been saved: %s", bookComment);
     }
@@ -97,9 +95,8 @@ public class ApplicationCommands {
     public String findBookCommentById(
             @ShellOption long id
     ) {
-        Optional<BookComment> bookComment = bookCommentService.findById(id);
-        return bookComment.isPresent() ? String.format("Book comment has been found: %s", bookComment) :
-                String.format("Book comment hasn't been found!");
+        BookComment bookComment = bookCommentService.findById(id).orElseThrow();
+        return String.format("Book comment has been found: %s", bookComment);
     }
 
     @ShellMethod(value = "Find book comments by book_id", key = {"fbcb"})

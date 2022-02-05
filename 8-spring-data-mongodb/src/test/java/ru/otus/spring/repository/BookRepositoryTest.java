@@ -1,12 +1,9 @@
 package ru.otus.spring.repository;
 
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import ru.otus.spring.domain.Book;
 
 import java.util.List;
@@ -14,29 +11,21 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе Jpa для работы с книгами ")
-@DataJpaTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@DataMongoTest
 public class BookRepositoryTest {
 
     @Autowired
     private BookRepository repository;
 
-    @Autowired
-    private TestEntityManager em;
-
-    @DisplayName("должен загружать список всех книг с полной информацией о них")
+    @DisplayName("должен находить нужную книгу по имени")
     @Test
-    void shouldReturnCorrectBookListWithAllInfo() {
-        SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory()
-                .unwrap(SessionFactory.class);
-        sessionFactory.getStatistics().setStatisticsEnabled(true);
+    void shouldFindBookByName() {
+        Book expectedBook = repository.findById(3L).orElseThrow();
 
-        List<Book> books = repository.findAll();
+        List<Book> actualBookList = repository.findByName("Декабрьское утро");
 
-        assertThat(books).isNotNull().hasSize(4)
-                .allMatch(b -> !b.getName().equals(""))
-                .allMatch(b -> b.getGenre() != null)
-                .allMatch(b -> b.getAuthor() != null);
-        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(1L);
+        assertThat(actualBookList).isNotNull()
+                .hasSize(1)
+                .containsOnly(expectedBook);
     }
 }

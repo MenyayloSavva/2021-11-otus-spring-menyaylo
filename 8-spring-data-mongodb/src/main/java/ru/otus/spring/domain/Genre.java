@@ -5,13 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Objects;
 
 /**
@@ -22,20 +18,17 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-@Entity
-@Table(name = "genres")
+@Document(collection = "genres")
 public final class Genre {
     /**
      * Идентификатор жанра.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     /**
      * Название жанра.
      */
-    @Column(name = "name", nullable = false)
     private String name;
 
 
