@@ -2,47 +2,55 @@ package ru.otus.spring.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.otus.spring.domain.Book;
 import ru.otus.spring.domain.BookComment;
 import ru.otus.spring.repository.BookCommentRepository;
+import ru.otus.spring.repository.BookRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BookCommentServiceImpl implements BookCommentService {
 
-    private final BookCommentRepository repository;
+    private final BookCommentRepository commentRepository;
+    private final BookRepository bookRepository;
 
     @Override
     public void save(BookComment comment) {
-        repository.save(comment);
+        commentRepository.save(comment);
     }
 
     @Override
     public Optional<BookComment> findById(long id) {
-        return repository.findById(id);
+        return commentRepository.findById(id);
     }
 
     @Override
     public List<BookComment> findByBookId(long id) {
-        return repository.findByBook_Id(id);
+        return bookRepository.findAll().stream()
+                .filter(b -> b.getId() == id)
+                .map(Book::getComments)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<BookComment> findAll() {
-        return repository.findAll();
+        return commentRepository.findAll();
     }
 
     @Override
     public void updateTextById(long id, String text) {
-        BookComment bookComment = repository.findById(id).orElseThrow();
+        BookComment bookComment = commentRepository.findById(id).orElseThrow();
         bookComment.setText(text);
-        repository.save(bookComment);
+        commentRepository.save(bookComment);
     }
 
     @Override
     public void deleteById(long id) {
-        repository.deleteById(id);
+        commentRepository.deleteById(id);
     }
 }
