@@ -1,9 +1,4 @@
 spring:
-  shell:
-    interactive:
-      enabled: false
-  main:
-    allow-circular-references: true
   mongodb:
     embedded:
       version: 3.5.5

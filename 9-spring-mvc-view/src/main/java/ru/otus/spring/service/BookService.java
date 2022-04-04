@@ -17,4 +17,6 @@ public interface BookService {
     void updateNameById(long id, String name);
 
     void deleteById(long id);
+
+    Book createBlankBook();
 }
