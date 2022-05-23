@@ -1,0 +1,5 @@
+ru/otus/spring/input/FileReaderImplTest.class
+ru/otus/spring/dao/ItemDaoCsvTest.class
+ru/otus/spring/service/ItemServiceImplTest.class
+ru/otus/spring/ApplicationTests.class
+ru/otus/spring/shell/ApplicationCommandsTest.class
