@@ -1,0 +1,49 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>JavaScript Demo</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script>
+        function getDataByJQuery() {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/',
+                success: (json) => {
+                  // Вот здесь пришёл ответ
+                    printData(json)
+                }
+              })
+        }
+    </script>
+
+    <script>
+        function printData(json) {
+            const dataContainer = document.getElementById("dataContainer")
+            dataContainer.innerHTML = JSON.stringify(json, undefined, 4)
+        }
+    </script>
+
+</head>
+    <button style = "width: 400px" onclick = "getDataByJQuery()">List books with JQuery</button><br/><br/>
+    <pre id = "dataContainer"></pre>
+<body>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

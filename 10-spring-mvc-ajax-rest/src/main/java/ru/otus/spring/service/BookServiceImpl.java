@@ -53,9 +53,9 @@ public class BookServiceImpl implements BookService {
     public Book createBlankBook() {
         return Book.builder()
                 .id(findAll().stream()
-                    .max(Comparator.comparing(Book::getId))
-                    .map(Book::getId)
-                    .orElse(0L) + 1)
+                        .max(Comparator.comparing(Book::getId))
+                        .map(Book::getId)
+                        .orElse(0L) + 1)
                 .author(Author.builder().id(1).build())
                 .genre(Genre.builder().id(1).build())
                 .build();
