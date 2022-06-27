@@ -1,0 +1,18 @@
+spring:
+  shell:
+    interactive:
+      enabled: false
+  main:
+    allow-circular-references: true
+
+project:
+  language: russian #default
+  path:
+    -
+      language: default
+      path_to_csv: /items/items.csv
+    -
+      language: russian
+      path_to_csv: /items/items_ru_RU.csv
+  answer:
+    required_amount: 2
