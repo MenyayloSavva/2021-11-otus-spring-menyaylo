@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
@@ -59,10 +58,8 @@ public final class Book {
     /**
      * Комментарий.
      */
-    @ReadOnlyProperty
-    @DocumentReference(lookup = "{'book':?#{#self._id} }")
+    @DBRef
     private List<BookComment> comments;
-
 
     @Override
     public boolean equals(Object o) {
@@ -86,6 +83,7 @@ public final class Book {
                 ", yearOfPublication='" + yearOfPublication + '\'' +
                 ", author=" + author +
                 ", genre=" + genre +
+                ", comments=" + comments +
                 '}';
     }
 }

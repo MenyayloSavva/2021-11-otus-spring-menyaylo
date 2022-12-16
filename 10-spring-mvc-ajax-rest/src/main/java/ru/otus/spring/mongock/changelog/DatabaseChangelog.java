@@ -66,12 +66,17 @@ public class DatabaseChangelog {
         Book book2 = bookRepository.findById(2L).orElseThrow();
         Book book4 = bookRepository.findById(4L).orElseThrow();
 
-        bookCommentRepository.saveAll(List.of(
-                new BookComment(1, "Первый комментарий", book1),
-                new BookComment(2, "Второй комментарий", book1),
-                new BookComment(3, "Третий комментарий", book2),
-                new BookComment(4, "Четвертый комментарий", book4),
-                new BookComment(5, "Пятый комментарий", book4)
-        ));
+        BookComment bookComment1 = new BookComment(1, "Первый комментарий");
+        BookComment bookComment2 = new BookComment(2, "Второй комментарий");
+        BookComment bookComment3 = new BookComment(3, "Третий комментарий");
+        BookComment bookComment4 = new BookComment(4, "Четвертый комментарий");
+        BookComment bookComment5 = new BookComment(5, "Пятый комментарий");
+
+        book1.setComments(List.of(bookComment1, bookComment2));
+        book2.setComments(List.of(bookComment3));
+        book4.setComments(List.of(bookComment4, bookComment5));
+
+        bookCommentRepository.saveAll(List.of(bookComment1, bookComment2, bookComment3, bookComment4, bookComment5));
+        bookRepository.saveAll(List.of(book1, book2, book4));
     }
 }

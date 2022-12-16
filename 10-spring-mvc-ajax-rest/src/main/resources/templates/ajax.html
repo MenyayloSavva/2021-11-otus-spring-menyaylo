@@ -8,9 +8,8 @@
         function getDataByJQuery() {
             $.ajax({
                 type: 'GET',
-                url: 'http://localhost:8080/',
+                url: 'http://localhost:8080/api/books/list/',
                 success: (json) => {
-                  // Вот здесь пришёл ответ
                     printData(json)
                 }
               })
@@ -24,8 +23,24 @@
         }
     </script>
 
+    <script>
+        function editBook() {
+            var bookId = document.getElementById('id-input').value
+
+            var params = new URLSearchParams();
+            params.append("bookId", bookId);
+            location.href = "edit.html?" + params.toString()
+        }
+    </script>
+
+
 </head>
     <button style = "width: 400px" onclick = "getDataByJQuery()">List books with JQuery</button><br/><br/>
+
+    <label for="id-input">BOOK_ID:</label> <input id="id-input" type="text" style = "width: 60px"/>
+    <button style = "width: 127px" onclick = "editBook()">Edit book</button>
+    <button style = "width: 127px" onclick = "editBook()">Create book</button><br/><br/>
+
     <pre id = "dataContainer"></pre>
 <body>
 </body>

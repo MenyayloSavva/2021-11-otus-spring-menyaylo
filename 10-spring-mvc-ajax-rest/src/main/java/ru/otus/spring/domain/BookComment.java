@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Objects;
 
@@ -33,12 +31,12 @@ public final class BookComment {
      */
     private String text;
 
-    /**
-     * Книга.
-     */
-    @Field(name = "book_id")
-    @DocumentReference
-    private Book book;
+//    /**
+//     * Книга.
+//     */
+//    @Field(name = "book_id")
+//    @DocumentReference
+//    private Book book;
 
 
     @Override
@@ -46,12 +44,12 @@ public final class BookComment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BookComment that = (BookComment) o;
-        return text.equals(that.text) && book.equals(that.book);
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(text, book);
+        return Objects.hash(id);
     }
 
     @Override
@@ -59,7 +57,6 @@ public final class BookComment {
         return "BookComment{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
-                ", book=" + book +
                 '}';
     }
 }

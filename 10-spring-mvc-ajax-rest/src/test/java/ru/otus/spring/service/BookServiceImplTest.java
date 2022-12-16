@@ -115,7 +115,7 @@ public class BookServiceImplTest {
         Author author = new Author(1L, "Vasiliy Ivanov", "Russia", LocalDate.of(1900, 1, 1));
         Genre genre = new Genre(1L, "Любовная проза");
         Book book = new Book();
-        BookComment bookComment = new BookComment(1L, "Some comment text", book);
+        BookComment bookComment = new BookComment(1L, "Some comment text");
         return book.toBuilder()
                 .id(1L)
                 .name("book1")

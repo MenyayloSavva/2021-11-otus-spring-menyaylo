@@ -23,7 +23,6 @@ public class BookRepositoryTest {
         Book expectedBook = repository.findById(3L).orElseThrow();
 
         List<Book> actualBookList = repository.findByName("Декабрьское утро");
-
         assertThat(actualBookList).isNotNull()
                 .hasSize(1)
                 .containsOnly(expectedBook);

@@ -61,8 +61,7 @@ public class BookCommentServiceImplTest {
         List<BookComment> actualCommentList = bookCommentService.findAll();
 
         assertThat(actualCommentList).hasSize(2)
-                .allMatch(bc -> bc.getText().equals("Some comment text"))
-                .allMatch(bc -> bc.getBook() != null);
+                .allMatch(bc -> bc.getText().equals("Some comment text"));
         verify(repository, times(1)).findAll();
     }
 
@@ -90,6 +89,6 @@ public class BookCommentServiceImplTest {
 
     private BookComment createBookComment() {
         Book book = new Book();
-        return new BookComment(1L, "Some comment text", book);
+        return new BookComment(1L, "Some comment text");
     }
 }
